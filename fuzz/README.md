@@ -56,7 +56,8 @@ $UPX_UCLDIR/src/n2d_99.o $UPX_UCLDIR/src/n2d_d.o $UPX_UCLDIR/src/n2d_ds.o
 $UPX_UCLDIR/src/n2d_to.o $UPX_UCLDIR/src/n2e_99.o $UPX_UCLDIR/src/n2e_d.o
 $UPX_UCLDIR/src/n2e_ds.o $UPX_UCLDIR/src/n2e_to.o $UPX_UCLDIR/src/ucl_crc.o
 $UPX_UCLDIR/src/ucl_init.o $UPX_UCLDIR/src/ucl_ptr.o $UPX_UCLDIR/src/ucl_str.o
-$UPX_UCLDIR/src/ucl_util.o ```
+$UPX_UCLDIR/src/ucl_util.o
+```
 
 1. Get a corpus of samples.
 
@@ -65,4 +66,3 @@ $UPX_UCLDIR/src/ucl_util.o ```
 1. Fuzz
 
 ```fuzz/a.out /tmp/upx_fuzzing_corpus```
-~~~
