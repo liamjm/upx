@@ -33,8 +33,10 @@ make all
 
 1.  Build fuzzer
 
-~~~
+NOTE: requires changes to src/main.cpp to remove the main() function and allow
+the fuzzer to link as a library. See this branch for the changes.
 
+```
 cd fuzz && clang++ -g -fsanitize=address,fuzzer unpacker_fuzzer.cc -lz
 -L../src -v ../src/c_file.o ../src/c_init.o ../src/c_none.o ../src/compress.o
 ../src/compress_lzma.o ../src/compress_ucl.o ../src/compress_zlib.o
