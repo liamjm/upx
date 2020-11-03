@@ -654,6 +654,7 @@ int original_main(int, char**);
 extern const char *progname;
 bool set_exit_code(int ec);
 #if (ACC_CC_CLANG || ACC_CC_GNUC || ACC_CC_LLVM || ACC_CC_PATHSCALE)
+// HACK HACK HACK: do this better
 void e_exit(int ec) /*__attribute__((__noreturn__))*/;
 #else
 void e_exit(int ec);

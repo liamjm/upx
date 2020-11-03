@@ -11,8 +11,7 @@ extern int original_main(int argc, char** argv);
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   // This is the minimum size of file accepted. The fuzzing is faster if we
   // check this early on.
-  if (size < 512) 
-  {
+  if (size < 512) {
     return 0;
   }
   // Write file to disk.
