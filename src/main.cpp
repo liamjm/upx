@@ -124,7 +124,7 @@ static void do_exit(void)
 
     fflush(con_term);
     fflush(stderr);
-    //    exit(exit_code);
+    exit(exit_code);
 }
 */
 
@@ -168,6 +168,7 @@ bool set_exit_code(int ec)
 void e_exit(int ec)
 {
     (void) set_exit_code(ec);
+    // HACK HACK HACK: do this better (#defines?)
     //do_exit();
 }
 
@@ -1457,7 +1458,7 @@ int __acc_cdecl_main original_main(int argc, char *argv[])
     while (progname[0] == '.' && progname[1] == '/'  && progname[2])
         progname += 2;
 
-    //set_term(stderr);
+    set_term(stderr);
 
     if (upx_ucl_init() != 0)
     {
@@ -1524,7 +1525,7 @@ int __acc_cdecl_main original_main(int argc, char *argv[])
     /* check options */
     if (argc == 1)
         e_help();
-    //set_term(stderr);
+    set_term(stderr);
     check_options(i,argc);
     num_files = argc - i;
     if (num_files < 1)
@@ -1536,7 +1537,7 @@ int __acc_cdecl_main original_main(int argc, char *argv[])
     }
 
     /* start work */
-    set_term(NULL);
+    set_term(stdout);
     do_files(i,argc,argv);
 
     if (gitrev[0])

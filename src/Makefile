@@ -68,7 +68,6 @@ endif
 CXXFLAGS += -fno-strict-aliasing -fwrapv
 CXXFLAGS += -funsigned-char
 CXXFLAGS += -Wall -W -Wcast-align -Wcast-qual -Wmissing-declarations -Wpointer-arith -Wshadow -Wvla -Wwrite-strings
-# CXXFLAGS += -fPIC
 CXXFLAGS_WERROR ?= -Werror
 CXXFLAGS += $(CXXFLAGS_WERROR)
 
@@ -82,10 +81,6 @@ endif
 # rules
 all: upx$(exeext) | ./.depend
 .DELETE_ON_ERROR: upx$(exeext) $(upx_OBJECTS) ./.depend
-
-upx.so: $(upx_OBJECTS) $(upx_DEPENDENCIES)
-	$($(notdir $@).PRE_LINK_STEP)
-	$(strip $(CXXLD) $(call ee,CXXFLAGS) $(call ee,LDFLAGS) -shared -o $@ $(upx_OBJECTS) $(call ee,LDADD) $(call ee,LIBS))
 
 upx$(exeext): $(upx_OBJECTS) $(upx_DEPENDENCIES)
 	$($(notdir $@).PRE_LINK_STEP)
