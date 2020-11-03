@@ -110,7 +110,7 @@ static int exit_code = EXIT_OK;
 /*************************************************************************
 // exit handlers
 **************************************************************************/
-
+/*
 #if defined(__GNUC__)
 static void do_exit(void) __attribute__((__noreturn__));
 #endif
@@ -124,8 +124,9 @@ static void do_exit(void)
 
     fflush(con_term);
     fflush(stderr);
-    exit(exit_code);
+    //    exit(exit_code);
 }
+*/
 
 
 #define EXIT_FATAL  3
@@ -167,7 +168,7 @@ bool set_exit_code(int ec)
 void e_exit(int ec)
 {
     (void) set_exit_code(ec);
-    do_exit();
+    //do_exit();
 }
 
 
@@ -1410,7 +1411,7 @@ extern "C" { extern long _stksize; long _stksize = 256 * 1024L; }
 extern "C" { extern int _dowildcard; int _dowildcard = -1; }
 #endif
 
-int __acc_cdecl_main main(int argc, char *argv[])
+int __acc_cdecl_main original_main(int argc, char *argv[])
 {
     int i;
     static char default_argv0[] = "upx";
@@ -1455,7 +1456,7 @@ int __acc_cdecl_main main(int argc, char *argv[])
     while (progname[0] == '.' && progname[1] == '/'  && progname[2])
         progname += 2;
 
-    set_term(stderr);
+    //set_term(stderr);
 
     if (upx_ucl_init() != 0)
     {
@@ -1522,7 +1523,7 @@ int __acc_cdecl_main main(int argc, char *argv[])
     /* check options */
     if (argc == 1)
         e_help();
-    set_term(stderr);
+    //set_term(stderr);
     check_options(i,argc);
     num_files = argc - i;
     if (num_files < 1)
@@ -1534,7 +1535,7 @@ int __acc_cdecl_main main(int argc, char *argv[])
     }
 
     /* start work */
-    set_term(stdout);
+    set_term(NULL);
     do_files(i,argc,argv);
 
     if (gitrev[0])
