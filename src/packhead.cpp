@@ -199,9 +199,15 @@ bool PackHeader::fillPackHeader(const upx_bytep buf, int blen) {
     //
     // decode the new variable length header
     //
+    // NOTE: the getPackHeaderSize() check is based on thev _version_ whereas
+    // the code below does not.
+    const int size_remaining = blen - boff;
 
     int off_filter = 0;
     if (format < 128) {
+        if (16 >  size_remaining) {
+          throwCantUnpack("header corrupted 5");
+        }
         u_adler = get_le32(p + 8);
         c_adler = get_le32(p + 12);
         if (format == UPX_F_DOS_COM || format == UPX_F_DOS_SYS) {
@@ -245,9 +251,12 @@ bool PackHeader::fillPackHeader(const upx_bytep buf, int blen) {
         n_mru = p[30] ? 1 + p[30] : 0;
     }
 
-    if (version >= 10)
+    if (version >= 10) {
+        if (off_filter >  size_remaining) {
+          throwCantUnpack("header corrupted 10");
+        }
         filter = p[off_filter];
-    else if ((level & 128) == 0)
+    } else if ((level & 128) == 0)
         filter = 0;
     else {
         // convert old flags to new filter id
