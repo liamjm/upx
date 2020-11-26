@@ -120,8 +120,6 @@ PackMachBase<T>::PackMachBase(InputFile *f, unsigned cputype, unsigned filetype,
 template <class T>
 PackMachBase<T>::~PackMachBase()
 {
-    delete [] rawmseg;
-    delete [] msegcmd;
 }
 
 PackDylibI386::PackDylibI386(InputFile *f) : super(f)
@@ -1385,7 +1383,9 @@ void PackMachBase<T>::unpack(OutputFile *fo)
     if ((sizeof(mhdri) + sz_cmds) > (size_t)fi->st_size()) {
         throwCantUnpack("file header corrupted");
     }
-    rawmseg = (Mach_segment_command *) New(char, sz_cmds);
+    rawmseg_mem.dealloc();
+    rawmseg_mem.alloc(sz_cmds);
+    rawmseg = static_cast<Mach_segment_command *>(rawmseg_mem.getVoidPtr());
     fi->readx(rawmseg, mhdri.sizeofcmds);
 
     // FIXME forgot space left for LC_CODE_SIGNATURE;
@@ -1418,7 +1418,8 @@ void PackMachBase<T>::unpack(OutputFile *fo)
 
     // Uncompress Macho headers
     fi->readx(ibuf, ph.c_len);
-    Mach_header *const mhdr = (Mach_header *) New(upx_byte, ph.u_len);
+    MemBuffer mhdr_mem(ph.u_len);
+    Mach_header *const mhdr = static_cast<Mach_header *>(mhdr_mem.getVoidPtr());
     decompress(ibuf, (upx_byte *)mhdr, false);
     if (mhdri.magic      != mhdr->magic
     ||  mhdri.cputype    != mhdr->cputype
@@ -1427,7 +1428,9 @@ void PackMachBase<T>::unpack(OutputFile *fo)
         throwCantUnpack("file header corrupted");
     unsigned const ncmds = mhdr->ncmds;
 
-    msegcmd = New(Mach_segment_command, ncmds);
+    msegcmd_mem.dealloc();
+    msegcmd_mem.alloc(sizeof(Mach_segment_command)*ncmds);
+    msegcmd = static_cast<Mach_segment_command*>(msegcmd_mem.getVoidPtr());
     unsigned char const *ptr = (unsigned char const *)(1+mhdr);
     for (unsigned j= 0; j < ncmds; ++j) {
       size_t bytes_to_write = umin(sizeof(Mach_segment_command), ((Mach_command const *)ptr)->cmdsize);
@@ -1510,7 +1513,6 @@ void PackMachBase<T>::unpack(OutputFile *fo)
                 c_adler, u_adler, false, sizeof(bhdr));
         }
     }
-    delete [] mhdr;
 }
 
 // The prize is the value of overlay_offset: the offset of compressed data
@@ -1538,7 +1540,9 @@ int PackMachBase<T>::canUnpack()
     if (2048 < headway) {
         infoWarning("Mach_header.sizeofcmds(%d) > 1024", headway);
     }
-    rawmseg = (Mach_segment_command *) New(char, mhdri.sizeofcmds);
+    rawmseg_mem.dealloc();
+    rawmseg_mem.alloc(mhdri.sizeofcmds);
+    rawmseg = static_cast<Mach_segment_command *>(rawmseg_mem.getVoidPtr());
     fi->readx(rawmseg, mhdri.sizeofcmds);
 
     Mach_segment_command const *ptrTEXT = 0;
