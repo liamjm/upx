@@ -56,6 +56,7 @@ LIBS += -lucl -lz
 include $(top_srcdir)/src/stub/src/c/Makevars.lzma
 
 CPPFLAGS += $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES)
+CXXFLAGS += -std=c++14
 ifeq ($(BUILD_TYPE_DEBUG),1)
 CXXFLAGS_OPTIMIZE ?= -O0 -g
 else
@@ -68,7 +69,7 @@ CXXFLAGS += -fno-delete-null-pointer-checks
 endif
 CXXFLAGS += -fno-strict-aliasing -fwrapv
 CXXFLAGS += -funsigned-char
-CXXFLAGS += -Wall -W -Wcast-align -Wcast-qual -Wmissing-declarations -Wpointer-arith -Wshadow -Wvla -Wwrite-strings
+CXXFLAGS += -Wall -W -Wcast-align -Wcast-qual -Wmissing-declarations -Wpointer-arith -Wshadow -Wsign-compare -Wvla -Wwrite-strings
 CXXFLAGS_WERROR ?= -Werror
 CXXFLAGS += $(CXXFLAGS_WERROR)
 
