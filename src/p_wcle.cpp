@@ -578,6 +578,8 @@ void PackWcle::pack(OutputFile *fo)
 void PackWcle::decodeFixups()
 {
     upx_byte *p = oimage + soimage;
+    upx_byte *end = oimage + oimage.getSize();
+
 
     iimage.dealloc();
 
@@ -603,7 +605,7 @@ void PackWcle::decodeFixups()
     const upx_byte *selector_fixups = p;
     const upx_byte *selfrel_fixups = p;
 
-    while (*selfrel_fixups != 0xC3)
+    while (selfrel_fixups + 9 <= end && *selfrel_fixups != 0xC3)
         selfrel_fixups += 9;
     selfrel_fixups++;
     unsigned selectlen = ptr_diff(selfrel_fixups, selector_fixups)/9;
